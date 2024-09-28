@@ -1,0 +1,7 @@
+# Ensure directory is included in repo but no configs are added.
+#
+# Ignore everything
+*
+
+# Except .gitignore
+!.gitignore
