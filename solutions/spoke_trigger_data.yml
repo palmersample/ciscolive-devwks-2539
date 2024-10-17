@@ -1,0 +1,13 @@
+---
+parameters:
+  tunnel_interface: Tunnel1
+  tunnel_interface_enabled: true
+  tunnel_ospf_area: 0
+  ospf_router_id: "0.0.0.%ENV{POD_NUMBER}"
+  ospf_process_id: 4
+
+configure_spoke_routing:
+  source:
+    class: configure_spoke_routing.ConfigureSpokeOspf
+  devices:
+    - devnet-rtr

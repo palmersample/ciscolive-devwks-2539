@@ -1,0 +1,23 @@
+---
+parameters:
+  tunnel_interface: Tunnel1
+  tunnel_interface_enabled: true
+  tunnel_ospf_area: 0
+
+test_config_state:
+  source:
+    class: config_state_test.TestOspfConfigState
+  devices:
+    - devnet-rtr
+  ospf_router_id: "0.0.0.%ENV{POD_NUMBER}"
+  ospf_process_id: 4
+
+test_op_state:
+  source:
+    class: op_state_test.TestOspfOpState
+  devices:
+    - devnet-rtr
+  devices_attributes:
+    devnet-rtr:
+      ospf_process_id: 4
+      ospf_router_id: "0.0.0.%ENV{POD_NUMBER}"

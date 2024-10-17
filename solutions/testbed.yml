@@ -1,0 +1,57 @@
+---
+testbed:
+  name: DevNet-Testbed
+  credentials:
+    default:
+      username: developer
+      password: C1sco12345!CL
+
+devices:
+  devnet-rtr:
+    os: iosxe
+    platform: cat8k
+    connections:
+      cli:
+        protocol: ssh
+        host: "%ENV{RTR_DNS_NAME}"
+        ssh_options: -F %ENV{PWD}/../ssh/ssh_config
+      defaults:
+        via: cli
+    custom:
+      ospf:
+        process_id: 4
+        router_id: "0.0.0.%ENV{POD_NUMBER}"
+        vrf_name: DEVNET-VRF
+
+  pod-common-rtr:
+#    alias: uut
+    os: iosxe
+    platform: cat8k
+    connections:
+      cli:
+        protocol: ssh
+        host: "pod-common-rtr.%ENV{DNS_DOMAIN}"
+        ssh_options: -F %ENV{PWD}/../ssh/ssh_config
+      defaults:
+        via: cli
+
+
+topology:
+  devnet-rtr:
+    interfaces:
+      Tunnel1:
+        ipv4: "100.64.0.%ENV{POD_NUMBER}/24"
+        type: tunnel
+        vrf_name: DEVNET-VRF
+        ospf:
+          process_id: 4
+          area: 0
+          network: broadcast
+          priority: 0
+      Loopback1:
+        ipv4: "172.16.1.%ENV{POD_NUMBER}/32"
+        type: loopback
+        vrf_name: DEVNET-VRF
+        ospf:
+          process_id: 4
+          area: 0
