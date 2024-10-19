@@ -138,7 +138,7 @@ restart_caddy()
   fi
 
   printf "%40s" "Starting log proxy: "
-  CADDY_START_RESULT=$(${TIMEOUT_CMD}caddy start --config Caddyfile 2>/dev/null /dev/null)
+  CADDY_START_RESULT=$(${TIMEOUT_CMD}caddy start --config Caddyfile 2>/dev/null >/dev/null)
   if [ $? -ne 0 ]; then
     ERROR_COUNT=${ERROR_COUNT+1}
     ERROR_MESSAGES="${ERROR_MESSAGES}\t- Problem starting Caddy server.\n"

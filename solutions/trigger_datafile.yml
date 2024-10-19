@@ -21,3 +21,4 @@ test_op_state:
     devnet-rtr:
       ospf_process_id: 4
       ospf_router_id: "0.0.0.%ENV{POD_NUMBER}"
+      hub_loopback_ip: 172.16.1.254/32
