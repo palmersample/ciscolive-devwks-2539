@@ -13,6 +13,11 @@ if [ "x${DNS_DOMAIN}" = "x" ]; then
   kill -INT $$
 fi
 
+# Create a persistent env file in case of connection error to the LL2
+# environment - can restore access without workshop interruption by sourcing
+# the filename specified here.
+SAVED_ENV_FILE="./workshop-env"
+
 [ ! -d "./ssh" ] && mkdir ./ssh
 NETCONF_SSH_CONFIG_FILE="./ssh/netconf_ssh_config"
 SSH_CONFIG_FILE="./ssh/ssh_config"
@@ -132,17 +137,21 @@ restart_caddy()
   if [ $? -le 1 ]; then
     echo "OK"
   else
-    ERROR_COUNT=${ERROR_COUNT+1}
-    ERROR_MESSAGES="${ERROR_MESSAGES}\t- Problem stopping Caddy server.\n"
-    echo "FAIL"
+    # Stopping and starting caddy should not be fatal errors -
+    # for this workshop, it just means the log server won't be
+    # accessible.
+    #
+    # ERROR_COUNT=${ERROR_COUNT+1}
+    # ERROR_MESSAGES="${ERROR_MESSAGES}\t- Problem stopping Caddy server.\n"
+    echo "FAIL (NOT CRITICAL)"
   fi
 
   printf "%40s" "Starting log proxy: "
   CADDY_START_RESULT=$(${TIMEOUT_CMD}caddy start --config Caddyfile 2>/dev/null >/dev/null)
   if [ $? -ne 0 ]; then
-    ERROR_COUNT=${ERROR_COUNT+1}
-    ERROR_MESSAGES="${ERROR_MESSAGES}\t- Problem starting Caddy server.\n"
-    echo "FAIL"
+    # ERROR_COUNT=${ERROR_COUNT+1}
+    # ERROR_MESSAGES="${ERROR_MESSAGES}\t- Problem starting Caddy server.\n"
+    echo "FAIL (NOT CRITICAL)"
   else
     echo "OK"
   fi
@@ -191,7 +200,13 @@ else
   export POD_NUMBER=${POD_NUMBER}
   export RTR_DNS_NAME=${RTR_DNS_NAME}
   export PROXY_DNS_NAME=${PROXY_DNS_NAME}
-  export PROXY_SSH_PORT=8000
+  export PROXY_SSH_PORT=${PROXY_SSH_PORT}
+
+  echo "export DNS_DOMAIN=${DNS_DOMAIN}" > ${SAVED_ENV_FILE}
+  echo "export POD_NUMBER=${POD_NUMBER}" >> ${SAVED_ENV_FILE}
+  echo "export RTR_DNS_NAME=${RTR_DNS_NAME}" >> ${SAVED_ENV_FILE}
+  echo "export PROXY_DNS_NAME=${PROXY_DNS_NAME}" >> ${SAVED_ENV_FILE}
+  echo "export PROXY_SSH_PORT=${PROXY_SSH_PORT}" >> ${SAVED_ENV_FILE}
 fi
 
 echo ""
