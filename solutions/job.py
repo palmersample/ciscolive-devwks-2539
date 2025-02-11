@@ -24,7 +24,6 @@ __copyright__ = "Copyright (c) 2024 Cisco and/or its affiliates."
 __license__ = "Cisco Sample Code License, Version 1.1"
 
 import os
-
 from genie.harness.main import gRun
 
 def main():
@@ -36,4 +35,5 @@ def main():
     test_path = os.path.dirname(os.path.abspath(__file__))
 
     gRun(subsection_datafile=f"{test_path}/subsection_datafile.yml",
+         trigger_datafile=f"{test_path}/trigger_datafile.yml",
          testbed=f"{test_path}/testbed.yml")

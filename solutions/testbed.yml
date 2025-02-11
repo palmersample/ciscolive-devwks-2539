@@ -15,10 +15,5 @@ devices:
         protocol: ssh
         host: "%ENV{RTR_DNS_NAME}"
         ssh_options: -F %ENV{PWD}/../ssh/ssh_config
-      defaults:
-        via: cli
-    custom:
-      ospf:
-        process_id: 4
-        router_id: "0.0.0.%ENV{POD_NUMBER}"
-        vrf_name: DEVNET-VRF
+        arguments:
+          learn_hostname: true
