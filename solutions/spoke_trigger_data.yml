@@ -1,13 +1,17 @@
 ---
-parameters:
-  tunnel_interface: Tunnel1
-  tunnel_interface_enabled: true
-  tunnel_ospf_area: 0
-  ospf_router_id: "0.0.0.%ENV{POD_NUMBER}"
-  ospf_process_id: 4
-
 configure_spoke_routing:
   source:
     class: configure_spoke_routing.ConfigureSpokeOspf
   devices:
     - devnet-rtr
+  devices_attributes:
+    devnet-rtr:
+      ospf_process_id: 4
+      ospf_router_id: "0.0.0.%ENV{POD_NUMBER}"
+      tunnel_interface: Tunnel1
+      tunnel_ospf_area: 0.0.0.0
+      tunnel_interface_enabled: true
+      hub_loopback_ip: 172.16.1.254/32
+
+uids:
+  - configure_spoke_routing
