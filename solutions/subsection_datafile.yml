@@ -1,10 +1,10 @@
 ---
+extends: "%CALLABLE{genie.libs.sdk.genie_yamls.datafile(subsection)}"
+
 setup:
-  sections:
-    connect:
-      method: genie.harness.commons.connect
   order:
     - connect
 
 cleanup:
   sections:
+  order: []
